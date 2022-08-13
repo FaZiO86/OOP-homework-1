@@ -49,7 +49,30 @@ int main(){
 	else {
 		cout << "Квартира подходит для " << kolvo << " жильцов" << endl << endl;
 	}
-
+			
+	
+			//Исключения
+	try {
+		//s.setCountMarks(-30);
+		//s.setMarksStudent(0, -5);
+		
+		
+		//пробовал 2 варианта.
+		//f.getResident(3);
+	}
+	catch(const char * ex) {
+		cout << "Ошибка: " << ex << endl;
+	}
+	//f.setCountResident(-2);
+			//вот это исключение так и не получилось обработать! 
+	f.setResident(h,2);// например f.setResident(h,4);
+			//Туту тоже не смог обработать исключение.
+	f.getResident(2);// например f.getResident(3);
+	//вроде бы исключение обрабатывается, тоесть выводит данные об ошибке, но программа не останавливается.
+	
+	
+	
+	
 	
 	return 0;
 }

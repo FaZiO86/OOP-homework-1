@@ -17,7 +17,7 @@ Human::Human(string humanName,
 	
 }
 
-string Human::fullName() {
+string Human::fullName() noexcept {
 	string str;
 	str += name;
 	str += " ";
@@ -52,6 +52,9 @@ Student::~Student() {
 }
 
 void Student::setCountMarks(int countMarks) {
+	if (countMarks < 0) {
+		throw "Количество студентов не может быть отрицательным";
+	}
 	if (marks_student) {
 		delete[]marks_student;
 	}
@@ -60,17 +63,20 @@ void Student::setCountMarks(int countMarks) {
 }
 
 void Student::setMarksStudent(int mark, int count) {
+	if (count < 0) {
+		throw "число не может быть отрицательным!";
+	}
 	marks_student[count] = mark;
 }
 
-void Student::getMark() {
+void Student::getMark()noexcept {
 	for (int i = 0; i < count_marks; i++) {
 		cout << marks_student[i] << ", ";
 	}
 	cout << "\b\b.\n";
 }
 
-int Student::rating() {
+int Student::rating()noexcept {
 	double sum = 0;
 	for (int i = 0; i < count_marks; i++) {
 		sum += marks_student[i];
@@ -97,32 +103,61 @@ Flat::~Flat() {
 	}
 }
 
-void Flat::setCountResident(unsigned int countR) {
-	if (residents) {
-		Human* tmp = new Human[count_resident];
-		for (int i = 0; i < count_resident; i++) {
-			tmp[i] = residents[count_resident];
+void Flat::setCountResident(int countR) {
+	
+	try {
+		if (residents) {
+			Human* tmp = new Human[count_resident];
+			for (int i = 0; i < count_resident; i++) {
+				tmp[i] = residents[count_resident];
+			}
+			delete[] residents;
+			residents = new Human[countR];
+			for (int i = 0; i < count_resident; i++) {
+				residents[i] = tmp[i];
+			}
+			delete[] tmp;
 		}
-		delete[] residents;
-		residents = new Human[countR];
-		for (int i = 0; i < count_resident; i++) {
-			residents[i] = tmp[i];
-		}
-		delete[] tmp;
+		else
+			residents = new Human[countR];
+		count_resident = countR;
 	}
-	else
-		residents = new Human[countR];
-	count_resident = countR;
+	catch(const std::bad_alloc & ex){
+		cout << ex.what() << endl;
+	}
 }
 
-void  Flat::showResidents() {
+void Flat::setResident(Human resident, int index) {
+	try {
+		residents[index] = resident;
+	}
+	catch (const std::exception& ex) {
+		cout << ex.what() << endl;
+	}
+
+}
+
+Human Flat::getResident(int index) {
+	//if (index < 0 && index > getCountResident()) {
+	//	throw " Вы вышли за границы списка!";
+	//}
+	try {
+		return residents[index];
+	}
+	catch (const std::bad_alloc & ex) {
+		cout << ex.what() << endl;
+	}
+	//return residents[index];
+}
+
+void  Flat::showResidents()noexcept {
 	for (int i = 0; i < count_resident; i++) {
 		cout << i + 1 << " жилец: " << getResident(i).fullName() << " - "
 			<< getResident(i).getBirthday() << " года рождения" << endl;
 	}
 }
 
-int Flat::showCoeff(int count) {
+int Flat::showCoeff(int count)noexcept {
 	if (count <= 0) {
 		return 0;
 	}
